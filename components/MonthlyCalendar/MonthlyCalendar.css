@@ -1,0 +1,8 @@
+.MonthlyCalendar{
+  display: grid; 
+  justify-content: center;
+}
+
+.Week{
+  display: flex;
+}
