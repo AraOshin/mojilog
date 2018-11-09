@@ -7,6 +7,7 @@ import MonthlyCalendar from '../components/MonthlyCalendar/MonthlyCalendar';
 const Calendar = () => (
   <div>
     <MonthlyCalendar />
+
   </div>
 );
 
@@ -20,7 +21,7 @@ Calendar.getInitialProps = async ({ store }) => {
     type: 'FETCH',
     emojiData: res.data.data,
     calendarData: res.data.calendar,
-    checkinPreferences: res.data.checkinPreferences,
+    logsData: res.data.logs,
   });
 };
 

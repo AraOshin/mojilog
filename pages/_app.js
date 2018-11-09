@@ -14,8 +14,11 @@ import getPageContext from '../src/getPageContext';
 const initialState = {
   emojiData: {},
   calendarData: {},
-  checkinPreferences: {},
   loading: {},
+  logsData: {},
+  activeLogKey: '-oQKlmrGL',
+  inJournalMode: true,
+
 
 };
 
@@ -27,7 +30,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         emojiData: action.emojiData,
         calendarData: action.emojiData,
-        checkinPreferences: action.checkinPreferences,
+        logsData: action.logsData,
       };
     case 'SET_LOADING':
       // console.log('reducer called', action.payload);
@@ -37,7 +40,32 @@ const reducer = (state = initialState, action) => {
     case 'UPDATE_CELL_EMOJI':
       // console.log('reducer called', action.payload);
       return {
-        ...state, emojiData: { ...state.emojiData, ...action.emoji },
+
+        ...state,
+        logsData: {
+          ...state.logsData,
+          [action.activeLogKey]: {
+            ...state.logsData[action.activeLogKey],
+            data: {
+              ...state.logsData[action.activeLogKey].data,
+              ...action.emoji,
+            },
+          },
+        },
+      };
+    case 'ADMIN_FETCH':
+      console.log('reducer called', action.logsData);
+      return {
+        ...state,
+        logsData: action.logsData,
+      };
+    case 'SET_ACTIVE_LOG':
+      console.log('reducer called', action.selectedLogKey);
+
+      return {
+        ...state,
+        activeLogKey: action.selectedLogKey,
+        inJournalMode: action.journalMode,
       };
 
 

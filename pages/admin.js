@@ -1,8 +1,32 @@
 import React from 'react';
-import CreateCheckinCard from '../components/Preferences/CreateCheckinCard';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import CheckinPreferences from '../components/Preferences/CheckinPreferences';
 
-const Admin = () => (
-  <CreateCheckinCard />
+
+const mapStateToProps = state => ({
+  logKeys: Object.keys(state.logsData),
+});
+
+
+const Admin = ({ logKeys }) => (
+  <div align="center">
+    {logKeys.map(logKey => <CheckinPreferences logKey={logKey} />)}
+    <CheckinPreferences inCreateMode />
+
+  </div>
+
 );
 
-export default Admin;
+
+Admin.getInitialProps = async ({ store }) => {
+  const dispatch = store.dispatch; // eslint-disable-line
+  const res = await axios.get('https://emoji-tracker-f72cc.firebaseio.com/logs.json');
+
+
+  dispatch({
+    type: 'ADMIN_FETCH',
+    logsData: res.data,
+  });
+};
+export default connect(mapStateToProps)(Admin);

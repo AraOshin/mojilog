@@ -12,6 +12,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { chooseEmojiThunk } from '../../src/thunks';
 import EmojiChoice from '../EmojiPicker/EmojiChoice';
 import AddButton from '../UI/AddButton';
+import EmojiPicker from '../EmojiPicker/EmojiPicker';
+
 
 const styles = {
   card: {
@@ -33,8 +35,11 @@ const styles = {
 };
 
 const mapStateToProps = (state, props) => ({
-  emoji: state.emojiData[props.date],
+  activeLogKey: state.activeLogKey,
+  emoji:
+    state.logsData[state.activeLogKey].data && state.logsData[state.activeLogKey].data[props.date],
   loading: state.loading[props.date],
+  inJournalMode: state.inJournalMode,
 });
 
 class CalendarCell extends Component {
@@ -54,7 +59,6 @@ class CalendarCell extends Component {
     this.state = {
       cell: {},
       showEmojiChoice: false,
-
 
     };
     this.cardRef = React.createRef();
@@ -82,14 +86,16 @@ class CalendarCell extends Component {
   }
 
   handleEmojiSelect = (emojiChoice) => {
-    const { date, dispatch } = this.props;
+    const { date, dispatch, activeLogKey } = this.props;
     const { showEmojiChoice } = this.state;
     const emojiSelection = {
+
       [date]: emojiChoice,
+
     };
     this.setState({ showEmojiChoice: !showEmojiChoice });
 
-    dispatch(chooseEmojiThunk(emojiSelection, date));
+    dispatch(chooseEmojiThunk(emojiSelection, date, activeLogKey));
   }
 
   renderCellContent = () => {
@@ -104,12 +110,10 @@ class CalendarCell extends Component {
     const {
       classes,
       date,
-      loading,
-      emoji,
+      inJournalMode,
     } = this.props;
-    const { showEmojiChoice } = this.state;
+    const { showEmojiChoice, showEmojiPicker } = this.state;
 
-    console.log(loading);
 
     return (
 
@@ -123,12 +127,21 @@ class CalendarCell extends Component {
             <CardActions>
               {this.renderCellContent()}
 
-              {showEmojiChoice && (
-                <EmojiChoice
-                  style={this.getEmojiChoiceStyle()}
-                  onEmojiClick={this.handleEmojiSelect}
-                  onOutsideClick={this.handleEmojiChoiceClick}
-                />
+              {showEmojiChoice && (inJournalMode
+                ? (
+                  <EmojiPicker
+                    style={this.getEmojiChoiceStyle()}
+                    onOutsideClick={this.handleEmojiChoiceClick}
+                    onEmojiSelect={this.handleEmojiSelect}
+                  />
+                )
+                : (
+                  <EmojiChoice
+                    style={this.getEmojiChoiceStyle()}
+                    onEmojiClick={this.handleEmojiSelect}
+                    onOutsideClick={this.handleEmojiChoiceClick}
+                  />
+                )
               )}
 
             </CardActions>
