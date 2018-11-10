@@ -16,7 +16,7 @@ const styles = theme => ({
 
 const AddButton = ({ classes, onClick }) => (
   <div>
-    <Button onClick={onClick} variant="fab" color="primary" aria-label="Add" className={classes.button}>
+    <Button onClick={onClick} mini variant="fab" color="primary" aria-label="Add" className={classes.button}>
       <AddIcon />
     </Button>
   </div>

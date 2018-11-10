@@ -8,6 +8,7 @@ import { switchActiveMojilog } from '../../src/thunks';
 
 const mapStateToProps = state => ({
   logsData: state.logsData,
+  activeLogKey: state.activeLogKey,
 });
 
 class LogsMenu extends React.Component {
@@ -29,7 +30,7 @@ class LogsMenu extends React.Component {
 
   render() {
     const { anchorEl } = this.state;
-    const { logsData } = this.props;
+    const { logsData, activeLogKey } = this.props;
 
     return (
       <div align="right">
@@ -44,7 +45,7 @@ class LogsMenu extends React.Component {
           id="simple-menu"
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
-          onClose={this.handleClose}
+          onClose={() => this.handleClose(activeLogKey)}
         >
 
           {Object.keys(logsData).map(logKey => (

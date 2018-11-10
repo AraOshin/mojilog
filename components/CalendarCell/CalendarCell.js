@@ -9,15 +9,17 @@ import { Emoji } from 'emoji-mart';
 import RootRef from '@material-ui/core/RootRef';
 import { connect } from 'react-redux';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 import { chooseEmojiThunk } from '../../src/thunks';
-import EmojiChoice from '../EmojiPicker/EmojiChoice';
 import AddButton from '../UI/AddButton';
+import EmojiChoice from '../EmojiPicker/EmojiChoice';
 import EmojiPicker from '../EmojiPicker/EmojiPicker';
 
 
 const styles = {
   card: {
-    width: 130,
+    width: 145,
     margin: 6,
     position: 'relative',
   },
@@ -38,6 +40,8 @@ const mapStateToProps = (state, props) => ({
   activeLogKey: state.activeLogKey,
   emoji:
     state.logsData[state.activeLogKey].data && state.logsData[state.activeLogKey].data[props.date],
+  journalEmojis:
+    state.logsData['-oQKlmrGL'].data[props.date] && Object.values(state.logsData['-oQKlmrGL'].data[props.date]),
   loading: state.loading[props.date],
   inJournalMode: state.inJournalMode,
 });
@@ -86,23 +90,57 @@ class CalendarCell extends Component {
   }
 
   handleEmojiSelect = (emojiChoice) => {
-    const { date, dispatch, activeLogKey } = this.props;
+    const {
+      date,
+      dispatch,
+      activeLogKey,
+      inJournalMode,
+      journalEmojis,
+    } = this.props;
+
     const { showEmojiChoice } = this.state;
-    const emojiSelection = {
 
-      [date]: emojiChoice,
+    const journalEmojiChoice = (inJournalMode && journalEmojis) ? journalEmojis.concat(emojiChoice) : [emojiChoice];
 
-    };
+    const emojiSelection = inJournalMode ? { [date]: journalEmojiChoice }
+      : { [date]: emojiChoice };
+
+
     this.setState({ showEmojiChoice: !showEmojiChoice });
 
     dispatch(chooseEmojiThunk(emojiSelection, date, activeLogKey));
   }
 
   renderCellContent = () => {
-    const { emoji, loading } = this.props;
-    if (!emoji) return <AddButton onClick={this.handleEmojiChoiceClick} />;
+    const {
+      emoji,
+      loading,
+      inJournalMode,
+      journalEmojis,
+    } = this.props;
 
-    if (!loading) return <Emoji onClick={this.handleEmojiChoiceClick} emoji={emoji} set="apple" size={48} />;
+
+    if (!emoji || (!journalEmojis && inJournalMode)) return <AddButton onClick={this.handleEmojiChoiceClick} />;
+
+    if (!loading) {
+      if (!inJournalMode) return <Emoji onClick={this.handleEmojiChoiceClick} emoji={emoji} set="apple" size={48} />;
+      return (
+        <div style={{
+          display: 'flex', justifyContent: 'center', flexWrap: 'wrap',
+        }}
+        >
+          {journalEmojis.map(journalEmoji => <Emoji onClick={this.handleEmojiChoiceClick} emoji={journalEmoji} set="apple" size={32} />)}
+
+          <Button onClick={this.handleEmojiChoiceClick} mini color="primary" aria-label="Add">
+            <AddIcon />
+          </Button>
+
+
+        </div>
+      );
+    }
+
+
     return <CircularProgress size={20} />;
   }
 
@@ -111,8 +149,9 @@ class CalendarCell extends Component {
       classes,
       date,
       inJournalMode,
+      journalEmojis,
     } = this.props;
-    const { showEmojiChoice, showEmojiPicker } = this.state;
+    const { showEmojiChoice } = this.state;
 
 
     return (
@@ -124,27 +163,28 @@ class CalendarCell extends Component {
             <Typography variant="h5" component="h2">
               {date}
             </Typography>
-            <CardActions>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
               {this.renderCellContent()}
+            </div>
 
-              {showEmojiChoice && (inJournalMode
-                ? (
-                  <EmojiPicker
-                    style={this.getEmojiChoiceStyle()}
-                    onOutsideClick={this.handleEmojiChoiceClick}
-                    onEmojiSelect={this.handleEmojiSelect}
-                  />
-                )
-                : (
-                  <EmojiChoice
-                    style={this.getEmojiChoiceStyle()}
-                    onEmojiClick={this.handleEmojiSelect}
-                    onOutsideClick={this.handleEmojiChoiceClick}
-                  />
-                )
-              )}
 
-            </CardActions>
+            {showEmojiChoice && (inJournalMode
+              ? (
+                <EmojiPicker
+                  style={this.getEmojiChoiceStyle()}
+                  onOutsideClick={this.handleEmojiChoiceClick}
+                  onEmojiSelect={this.handleEmojiSelect}
+                />
+              )
+              : (
+                <EmojiChoice
+                  style={this.getEmojiChoiceStyle()}
+                  onEmojiClick={this.handleEmojiSelect}
+                  onOutsideClick={this.handleEmojiChoiceClick}
+                />
+              )
+            )}
+
           </CardContent>
         </Card>
       </RootRef>
