@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { Emoji } from 'emoji-mart';
@@ -15,6 +14,7 @@ import { chooseEmojiThunk } from '../../src/thunks';
 import AddButton from '../UI/AddButton';
 import EmojiChoice from '../EmojiPicker/EmojiChoice';
 import EmojiPicker from '../EmojiPicker/EmojiPicker';
+import { getEmoji, getJournalEmojis } from '../../src/selectors/selectors';
 
 
 const styles = {
@@ -38,10 +38,8 @@ const styles = {
 
 const mapStateToProps = (state, props) => ({
   activeLogKey: state.activeLogKey,
-  emoji:
-    state.logsData[state.activeLogKey].data && state.logsData[state.activeLogKey].data[props.date],
-  journalEmojis:
-    state.logsData['-oQKlmrGL'].data[props.date] && Object.values(state.logsData['-oQKlmrGL'].data[props.date]),
+  emoji: getEmoji(state, props),
+  journalEmojis: getJournalEmojis(state, props),
   loading: state.loading[props.date],
   inJournalMode: state.inJournalMode,
 });
@@ -63,6 +61,7 @@ class CalendarCell extends Component {
     this.state = {
       cell: {},
       showEmojiChoice: false,
+      journalEmojiClickedIndex: null,
 
     };
     this.cardRef = React.createRef();
@@ -73,10 +72,11 @@ class CalendarCell extends Component {
     this.setState({ cell });
   }
 
-  handleEmojiChoiceClick = () => {
+  handleEmojiChoiceClick = (i) => {
     const { showEmojiChoice } = this.state;
-    this.setState({ showEmojiChoice: !showEmojiChoice });
+    this.setState({ showEmojiChoice: !showEmojiChoice, journalEmojiClickedIndex: i });
   };
+
 
   getEmojiChoiceStyle = () => {
     const { cell } = this.state;
@@ -98,18 +98,14 @@ class CalendarCell extends Component {
       journalEmojis,
     } = this.props;
 
-    const { showEmojiChoice } = this.state;
 
-    const journalEmojiChoice = (inJournalMode && journalEmojis) ? journalEmojis.concat(emojiChoice) : [emojiChoice];
+    const { showEmojiChoice, journalEmojiClickedIndex } = this.state;
 
-    const emojiSelection = inJournalMode ? { [date]: journalEmojiChoice }
-      : { [date]: emojiChoice };
+    dispatch(chooseEmojiThunk(emojiChoice, date, activeLogKey, journalEmojiClickedIndex));
 
-
-    this.setState({ showEmojiChoice: !showEmojiChoice });
-
-    dispatch(chooseEmojiThunk(emojiSelection, date, activeLogKey));
+    this.setState({ showEmojiChoice: !showEmojiChoice, journalEmojiClickedIndex: null });
   }
+
 
   renderCellContent = () => {
     const {
@@ -129,7 +125,7 @@ class CalendarCell extends Component {
           display: 'flex', justifyContent: 'center', flexWrap: 'wrap',
         }}
         >
-          {journalEmojis.map(journalEmoji => <Emoji onClick={this.handleEmojiChoiceClick} emoji={journalEmoji} set="apple" size={32} />)}
+          {journalEmojis.map((journalEmoji, i) => <Emoji onClick={() => this.handleEmojiChoiceClick(i)} emoji={journalEmoji} set="apple" size={32} />)}
 
           <Button onClick={this.handleEmojiChoiceClick} mini color="primary" aria-label="Add">
             <AddIcon />
