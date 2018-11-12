@@ -7,11 +7,14 @@ import CardContent from '@material-ui/core/CardContent';
 import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { Typography } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
+import Button from '@material-ui/core/Button';
 
 
 const styles = {
   card: {
-    width: 180,
+    width: 200,
     margin: 6,
   },
   bullet: {
@@ -35,6 +38,7 @@ const mapStateToProps = state => ({
 class EmojiChoice extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    emojiOptions: PropTypes.object.isRequired,
     onEmojiClick: PropTypes.func.isRequired,
     onOutsideClick: PropTypes.func.isRequired,
     style: PropTypes.object.isRequired,
@@ -58,6 +62,9 @@ class EmojiChoice extends Component {
           <CardContent align="center">
             {Object.values(emojiOptions).map(emojiChoice => <Emoji onClick={() => onEmojiClick(emojiChoice)} emoji={emojiChoice.id} set="apple" size={48} />)
             }
+            <Button onClick={() => onEmojiClick({})} mini color="primary" aria-label="Add">
+              <ClearIcon />
+            </Button>
           </CardContent>
         </Card>
       </OutsideClickHandler>

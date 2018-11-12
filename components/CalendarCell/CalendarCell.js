@@ -47,7 +47,7 @@ const mapStateToProps = (state, props) => ({
 class CalendarCell extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    emoji: PropTypes.array.isRequired,
+    // emoji: PropTypes.array.isRequired,
     date: PropTypes.number.isRequired, // TODO unrequire
     dispatch: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
@@ -98,12 +98,11 @@ class CalendarCell extends Component {
       journalEmojis,
     } = this.props;
 
-
     const { showEmojiChoice, journalEmojiClickedIndex } = this.state;
 
-    dispatch(chooseEmojiThunk(emojiChoice, date, activeLogKey, journalEmojiClickedIndex));
+    this.setState({ showEmojiChoice: !showEmojiChoice });
 
-    this.setState({ showEmojiChoice: !showEmojiChoice, journalEmojiClickedIndex: null });
+    dispatch(chooseEmojiThunk(emojiChoice, date, activeLogKey, journalEmojiClickedIndex));
   }
 
 
@@ -127,12 +126,13 @@ class CalendarCell extends Component {
         >
           {journalEmojis.map((journalEmoji, i) => <Emoji onClick={() => this.handleEmojiChoiceClick(i)} emoji={journalEmoji} set="apple" size={32} />)}
 
-          <Button onClick={this.handleEmojiChoiceClick} mini color="primary" aria-label="Add">
+          <Button onClick={() => this.handleEmojiChoiceClick(null)} mini color="primary" aria-label="Add">
             <AddIcon />
           </Button>
 
 
         </div>
+
       );
     }
 

@@ -9,19 +9,19 @@ export const chooseEmojiThunk = (emojiChoice, date, activeLogKey, journalEmojiCl
   const journalEmojis = getJournalEmojis(state, { date });
 
 
-  // const updatedjournalEmojis = [...journalEmojis];
-  // if (journalEmojiClickedIndex) updatedjournalEmojis[journalEmojiClickedIndex] = emojiChoice;
+  const updatedjournalEmojis = journalEmojis ? [...journalEmojis] : [];
+  if (journalEmojiClickedIndex) updatedjournalEmojis[journalEmojiClickedIndex] = emojiChoice;
 
   const journalEmojiChoice = (inJournalMode && journalEmojis)
     ? journalEmojis.concat(emojiChoice)
     : [emojiChoice];
 
-  // const journalChoiceToUse = journalEmojiClickedIndex ? updatedjournalEmojis : journalEmojiChoice;
+  const journalChoiceToUse = journalEmojiClickedIndex ? updatedjournalEmojis : journalEmojiChoice;
 
   const emojiSelection = {
     [date]:
       inJournalMode
-        ? journalEmojiChoice
+        ? journalChoiceToUse
         : emojiChoice,
   };
   // debugger;
