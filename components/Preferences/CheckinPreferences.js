@@ -2,19 +2,21 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Card, CardContent, CardHeader, Typography, CardActions, TextField, Button,
+  Card, CardContent, CardHeader, Typography, TextField, Button, Tooltip,
 } from '@material-ui/core';
 import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
 import AddButton from '../UI/AddButton';
 import EmojiPicker from '../EmojiPicker/EmojiPicker';
+import { getEmojiOptions } from '../../src/selectors/selectors';
 
 
 const styles = {
   card: {
     maxWidth: '600px',
     maxHeight: '800px',
+    margin: 14,
 
   },
   media: {
@@ -26,6 +28,7 @@ const styles = {
 const mapStateToProps = (state, props) => ({
   logData: state.logsData[props.logKey],
   inCreateMode: !!props.inCreateMode,
+  emojiOptions: state.logsData[props.logKey] ? state.logsData[props.logKey].emojiOptions : null,
 });
 
 
@@ -36,13 +39,7 @@ class CreateCheckinCard extends Component {
       showEmojiPicker: false,
       checkinNameInput: '',
       toSelect: 0,
-      selectedEmojis: props.inCreateMode ? [
-        {},
-        {},
-        {},
-        {},
-        {},
-      ] : props.logData.emojiOptions,
+      selectedEmojis: props.emojiOptions,
     };
   }
 
@@ -52,8 +49,8 @@ class CreateCheckinCard extends Component {
   };
 
   handleEmojiSelect = (emoji) => {
-    const { toSelect, selectedEmojis } = this.state;
     const { logData } = this.props;
+    const { toSelect, selectedEmojis } = this.state;
 
     const updatedSelectedEmojis = selectedEmojis;
     updatedSelectedEmojis[toSelect] = emoji;
@@ -63,13 +60,16 @@ class CreateCheckinCard extends Component {
       showEmojiPicker: false,
       toSelect: toSelect + 1,
     });
+    console.log(toSelect);
   };
 
   handleSubmitCheckinPreferences = () => {
     const { selectedEmojis, checkinNameInput } = this.state;
     const { logKey } = this.props;
 
+
     const newLogKey = logKey || shortid.generate();
+    console.log(newLogKey);
     const postBody = {
       [newLogKey]: {
         label: checkinNameInput,
@@ -100,11 +100,6 @@ class CreateCheckinCard extends Component {
     this.setState({ checkinNameInput: event.target.value });
   }
 
-  // renderCardContent = () => {
-  //   inCreateMode ?
-
-  // }
-
 
   render() {
     const {
@@ -113,7 +108,12 @@ class CreateCheckinCard extends Component {
       selectedEmojis,
     } = this.state;
 
-    const { classes, logData, inCreateMode } = this.props;
+    const {
+      classes,
+      logData,
+      inCreateMode,
+      emojiOptions,
+    } = this.props;
 
     return (
       <div align="center">
@@ -129,16 +129,28 @@ class CreateCheckinCard extends Component {
               onChange={this.handleInputChange}
             />
 
-            {toSelect < 5 && <AddButton onClick={this.handleEmojiPickerClick} />}
-            <Typography> Select up to 5 emoji options!</Typography>
+            {toSelect < 5
+              && (
+                <Tooltip title="Add">
+                  <AddButton onClick={this.handleEmojiPickerClick} />
+                </Tooltip>
+              )
+            }
+
             <div align="center">
               {showEmojiPicker && <EmojiPicker onEmojiSelect={this.handleEmojiSelect} />}
 
-              {selectedEmojis[0] && <Emoji emoji={selectedEmojis[0]} set="apple" size={48} />}
-              {selectedEmojis[1] && <Emoji emoji={selectedEmojis[1]} set="apple" size={48} />}
-              {selectedEmojis[2] && <Emoji emoji={selectedEmojis[2]} set="apple" size={48} />}
-              {selectedEmojis[3] && <Emoji emoji={selectedEmojis[3]} set="apple" size={48} />}
-              {selectedEmojis[4] && <Emoji emoji={selectedEmojis[4]} set="apple" size={48} />}
+              {emojiOptions
+                && Object.values(emojiOptions).map((emojiChoice, i) => (
+                  <Emoji
+                    emoji={emojiChoice.id}
+                    key={emojiChoice.id + i}
+
+                    set="apple"
+                    size={48}
+                  />
+                ))
+              }
               <Button color="primary">
                 Cancel
               </Button>

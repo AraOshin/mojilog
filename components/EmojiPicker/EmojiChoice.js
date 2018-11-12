@@ -10,6 +10,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { Typography } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import Button from '@material-ui/core/Button';
+import { getEmojiOptions } from '../../src/selectors/selectors';
 
 
 const styles = {
@@ -32,7 +33,7 @@ const styles = {
   },
 };
 const mapStateToProps = state => ({
-  emojiOptions: state.logsData[state.activeLogKey].emojiOptions,
+  emojiOptions: getEmojiOptions(state),
 });
 
 class EmojiChoice extends Component {

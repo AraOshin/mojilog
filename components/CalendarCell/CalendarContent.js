@@ -59,7 +59,7 @@ class CalendarContent extends Component {
     return {
       position: 'fixed',
       top: cell.top + 42,
-      left: cell.left - 30,
+      left: cell.left - 45,
       zIndex: 2,
     };
   }
@@ -91,7 +91,7 @@ class CalendarContent extends Component {
     } = this.props;
 
 
-    if (!emoji || (!journalEmojis && inJournalMode)) return <AddButton onClick={this.handleEmojiChoiceClick} />;
+    if (!emoji || (!journalEmojis && inJournalMode)) return <AddButton onClick={() => this.handleEmojiChoiceClick(null)} />;
 
     if (!loading) {
       if (!inJournalMode) return <Emoji onClick={this.handleEmojiChoiceClick} emoji={emoji} set="apple" size={48} />;
@@ -100,11 +100,13 @@ class CalendarContent extends Component {
           display: 'flex', justifyContent: 'center', flexWrap: 'wrap',
         }}
         >
-          {journalEmojis.map((journalEmoji, i) => <Emoji onClick={() => this.handleEmojiChoiceClick(i)} emoji={journalEmoji} set="apple" size={32} />)}
+          {journalEmojis.map((journalEmoji, i) => <Emoji onClick={() => this.handleEmojiChoiceClick(i)} emoji={journalEmoji} set="apple" size={34} />)}
 
-          <Button onClick={() => this.handleEmojiChoiceClick(null)} mini color="primary" aria-label="Add">
-            <AddIcon />
-          </Button>
+          {!journalEmojis[5] && (
+            <Button onClick={() => this.handleEmojiChoiceClick(null)} mini color="primary" aria-label="Add">
+              <AddIcon />
+            </Button>
+          )}
 
 
         </div>

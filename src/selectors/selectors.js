@@ -2,3 +2,5 @@ export const getEmoji = (state, props) => state.logsData[state.activeLogKey].dat
   && state.logsData[state.activeLogKey].data[props.date];
 
 export const getJournalEmojis = (state, props) => state.logsData['-oQKlmrGL'].data && state.logsData['-oQKlmrGL'].data[props.date];
+
+export const getEmojiOptions = state => state.logsData[state.activeLogKey].emojiOptions;

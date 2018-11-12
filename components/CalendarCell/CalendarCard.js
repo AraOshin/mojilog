@@ -5,7 +5,8 @@ import CalendarContent from './CalendarContent';
 
 const styles = {
   card: {
-    width: 145,
+    width: 150,
+    height: 155,
     margin: 6,
     position: 'relative',
   },

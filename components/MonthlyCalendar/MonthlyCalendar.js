@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
-import CalendarCell from '../CalendarCell/CalendarCell';
 import './MonthlyCalendar.css';
 import LogsMenu from '../UI/LogsMenu';
 import CalendarCard from '../CalendarCell/CalendarCard';
@@ -20,26 +19,17 @@ const MonthlyCalendar = ({ activeLogLabel }) => (
     </Typography>
 
     <div className="Week">
-      <CalendarCell
-        date={1}
-      />
-      <CalendarCell
-        date={2}
-      />
-      <CalendarCard date={3} />
-      <CalendarCell date={4} />
-      <CalendarCell date={5} />
-      <CalendarCell date={6} />
-      <CalendarCell date={7} />
+      {Array(7).fill(null).map((day, i) => <CalendarCard key={1 + i} date={1 + i} />)}
+    </div>
+
+    <div className="Week">
+      {Array(7).fill(null).map((day, i) => <CalendarCard key={8 + i} date={8 + i} />)}
     </div>
     <div className="Week">
-      {Array(7).fill(null).map((day, i) => <CalendarCell key={8 + i} date={8 + i} />)}
+      {Array(7).fill(null).map((day, i) => <CalendarCard key={15 + i} date={15 + i} />)}
     </div>
     <div className="Week">
-      {Array(7).fill(null).map((day, i) => <CalendarCell key={15 + i} date={15 + i} />)}
-    </div>
-    <div className="Week">
-      {Array(7).fill(null).map((day, i) => <CalendarCell key={22 + i} date={22 + i} />)}
+      {Array(7).fill(null).map((day, i) => <CalendarCard key={22 + i} date={22 + i} />)}
     </div>
   </div>
 );
