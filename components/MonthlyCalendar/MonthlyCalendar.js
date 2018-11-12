@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import CalendarCell from '../CalendarCell/CalendarCell';
 import './MonthlyCalendar.css';
 import LogsMenu from '../UI/LogsMenu';
+import CalendarCard from '../CalendarCell/CalendarCard';
 
 const mapStateToProps = state => ({
   activeLogLabel: state.logsData[state.activeLogKey].label,
@@ -25,7 +26,7 @@ const MonthlyCalendar = ({ activeLogLabel }) => (
       <CalendarCell
         date={2}
       />
-      <CalendarCell date={3} />
+      <CalendarCard date={3} />
       <CalendarCell date={4} />
       <CalendarCell date={5} />
       <CalendarCell date={6} />

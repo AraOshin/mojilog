@@ -2,21 +2,25 @@ import axios from 'axios';
 import { getJournalEmojis } from './selectors/selectors';
 
 
-export const chooseEmojiThunk = (emojiChoice, date, activeLogKey, journalEmojiClickedIndex) => async (dispatch, getState) => {
+export const chooseEmojiThunk = (
+  emojiChoice,
+  date,
+  activeLogKey,
+  journalEmojiClickedIndex,
+) => async (dispatch, getState) => {
   const state = getState();
-
   const { inJournalMode } = state;
   const journalEmojis = getJournalEmojis(state, { date });
 
-
   const updatedjournalEmojis = journalEmojis ? [...journalEmojis] : [];
-  if (journalEmojiClickedIndex) updatedjournalEmojis[journalEmojiClickedIndex] = emojiChoice;
+  if (journalEmojiClickedIndex != null) updatedjournalEmojis[journalEmojiClickedIndex] = emojiChoice;
 
   const journalEmojiChoice = (inJournalMode && journalEmojis)
     ? journalEmojis.concat(emojiChoice)
     : [emojiChoice];
 
-  const journalChoiceToUse = journalEmojiClickedIndex ? updatedjournalEmojis : journalEmojiChoice;
+
+  const journalChoiceToUse = journalEmojiClickedIndex != null ? updatedjournalEmojis : journalEmojiChoice;
 
   const emojiSelection = {
     [date]:
@@ -24,8 +28,6 @@ export const chooseEmojiThunk = (emojiChoice, date, activeLogKey, journalEmojiCl
         ? journalChoiceToUse
         : emojiChoice,
   };
-  // debugger;
-  console.log('thunk called');
 
   dispatch({ type: 'SET_LOADING', loading: true, date });
 
