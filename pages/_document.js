@@ -24,9 +24,6 @@ class MyDocument extends Document {
           />
 
 
-          <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js" />
-
-
         </Head>
         <body>
           <Main />

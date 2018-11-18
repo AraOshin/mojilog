@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  CardContent,
-  Typography,
-  CircularProgress,
-  Button,
-} from '@material-ui/core/';
+import { CircularProgress, Button } from '@material-ui/core/';
 import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
 import AddIcon from '@material-ui/icons/Add';
+import moment from 'moment';
+// import NoteAdd from '@material-ui/icons/NoteAdd';
 import { chooseEmojiThunk } from '../../src/thunks';
 import AddButton from '../UI/AddButton';
 import EmojiChoice from '../EmojiPicker/EmojiChoice';
 import EmojiPicker from '../EmojiPicker/EmojiPicker';
 import { getEmoji, getJournalEmojis } from '../../src/selectors/selectors';
 
-
 const mapStateToProps = (state, props) => ({
   activeLogKey: state.activeLogKey,
   emoji: getEmoji(state, props),
   journalEmojis: getJournalEmojis(state, props),
-  loading: state.loading[props.date],
+  loading: state.loading[props.monthDay + 1],
   inJournalMode: state.inJournalMode,
   cell: props.cell,
 });
@@ -28,9 +24,8 @@ const mapStateToProps = (state, props) => ({
 class CalendarContent extends Component {
   static propTypes = {
     // emoji: PropTypes.array.isRequired,
-    date: PropTypes.number.isRequired, // TODO unrequire
-    dispatch: PropTypes.func.isRequired,
-    loading: PropTypes.bool.isRequired,
+    dispatch: PropTypes.func,
+    loading: PropTypes.bool,
     cell: PropTypes.object.isRequired,
   };
 
@@ -42,6 +37,7 @@ class CalendarContent extends Component {
     this.state = {
       showEmojiChoice: false,
       journalEmojiClickedIndex: null,
+
 
     };
   }
@@ -88,13 +84,21 @@ class CalendarContent extends Component {
       loading,
       inJournalMode,
       journalEmojis,
+      cellId,
+      activeInMonth,
     } = this.props;
+
+    const startOfMonthDay = moment().startOf('month').day();
+
+    if (!activeInMonth) return <Emoji emoji="apple" set="apple" size={48} />;
 
 
     if (!emoji || (!journalEmojis && inJournalMode)) return <AddButton onClick={() => this.handleEmojiChoiceClick(null)} />;
 
     if (!loading) {
-      if (!inJournalMode) return <Emoji onClick={this.handleEmojiChoiceClick} emoji={emoji} set="apple" size={48} />;
+      if (!inJournalMode) {
+        return<Emoji onClick={this.handleEmojiChoiceClick} emoji={emoji} set="apple" size={48} />;
+      }
       return (
         <div style={{
           display: 'flex', justifyContent: 'center', flexWrap: 'wrap',
@@ -120,43 +124,42 @@ class CalendarContent extends Component {
 
   render() {
     const {
-      date,
       inJournalMode,
       journalEmojis,
+      key,
     } = this.props;
     const { showEmojiChoice } = this.state;
 
+    console.log(key);
 
     return (
 
-      <CardContent>
-
-        <Typography variant="h5" component="h2">
-          {date}
-        </Typography>
+      <div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           {this.renderCellContent()}
         </div>
 
 
-        {showEmojiChoice && (inJournalMode
-          ? (
-            <EmojiPicker
-              style={this.getEmojiChoiceStyle()}
-              onOutsideClick={this.handleEmojiChoiceClick}
-              onEmojiSelect={this.handleEmojiSelect}
-            />
+        {
+          showEmojiChoice && (inJournalMode
+            ? (
+              <EmojiPicker
+                style={this.getEmojiChoiceStyle()}
+                onOutsideClick={this.handleEmojiChoiceClick}
+                onEmojiSelect={this.handleEmojiSelect}
+              />
+            )
+            : (
+              <EmojiChoice
+                style={this.getEmojiChoiceStyle()}
+                onEmojiClick={this.handleEmojiSelect}
+                onOutsideClick={this.handleEmojiChoiceClick}
+              />
+            )
           )
-          : (
-            <EmojiChoice
-              style={this.getEmojiChoiceStyle()}
-              onEmojiClick={this.handleEmojiSelect}
-              onOutsideClick={this.handleEmojiChoiceClick}
-            />
-          )
-        )}
+        }
 
-      </CardContent>
+      </div>
 
 
     );

@@ -1,8 +1,14 @@
-.MonthlyCalendar{
+.monthly-calendar{
   display: grid; 
   justify-content: center;
+  width: 100%
 }
 
-.Week{
-  display: flex;
+
+.monthly-calendar-content{
+  display: flex; 
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 1200px
 }

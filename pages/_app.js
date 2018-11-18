@@ -18,6 +18,13 @@ const initialState = {
   logsData: {},
   activeLogKey: '-oQKlmrGL',
   inJournalMode: true,
+  calendarMode: null,
+  dashboardLogs: {
+    kWeLlAkRI: true,
+    mirYAfBzu: true,
+    z7vHuxqlk: true,
+  },
+  mojiLogsKeys: ['kWeLlAkRI', 'mirYAfBzu', 'z7vHuxqlk'],
 
 
 };
@@ -31,6 +38,7 @@ const reducer = (state = initialState, action) => {
         emojiData: action.emojiData,
         calendarData: action.emojiData,
         logsData: action.logsData,
+        calendarMode: action.calendarMode,
       };
     case 'SET_LOADING':
       // console.log('reducer called', action.payload);
@@ -53,6 +61,19 @@ const reducer = (state = initialState, action) => {
           },
         },
       };
+    case 'UPDATE_LOG_DEFAULT_EMOJIS':
+      console.log('reducer called', action.emojiUpdate);
+      return {
+
+        ...state,
+        logsData: {
+          ...state.logsData,
+          [action.logKey]: {
+            ...state.logsData[action.logKey],
+            emojiOptions: [...action.emojiUpdate],
+          },
+        },
+      };
     case 'ADMIN_FETCH':
       console.log('reducer called', action.logsData);
       return {
@@ -66,6 +87,16 @@ const reducer = (state = initialState, action) => {
         ...state,
         activeLogKey: action.selectedLogKey,
         inJournalMode: action.journalMode,
+      };
+    case 'MOJILOG_DASHBOARD_TOGGLE':
+      console.log('reducer called', action.selectedLogKey);
+
+      return {
+        ...state,
+        dashboardLogs: {
+          ...state.dashboardLogs,
+          [action.logKey]: !state.dashboardLogs[action.logKey],
+        },
       };
 
 

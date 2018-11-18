@@ -2,39 +2,47 @@ import React from 'react';
 import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import './MonthlyCalendar.css';
-import LogsMenu from '../UI/LogsMenu';
+import moment from 'moment';
+
 import CalendarCard from '../CalendarCell/CalendarCard';
 
-const mapStateToProps = state => ({
-  activeLogLabel: state.logsData[state.activeLogKey].label,
-});
+const cellsToRender = Math.ceil(
+  (moment().daysInMonth() + moment().startOf('month').day()) / 7,
+) * 7;
 
-const MonthlyCalendar = ({ activeLogLabel }) => (
-  <div className="MonthlyCalendar">
-    <LogsMenu />
-    <Typography gutterBottom paragraph align="center" variant="h4" component="h2" color="primary">
-      my
-      {' '}
-      {activeLogLabel}
-    </Typography>
 
-    <div className="Week">
-      {Array(7).fill(null).map((day, i) => <CalendarCard key={1 + i} date={1 + i} />)}
-    </div>
+const MonthlyCalendar = () => (
 
-    <div className="Week">
-      {Array(7).fill(null).map((day, i) => <CalendarCard key={8 + i} date={8 + i} />)}
-    </div>
-    <div className="Week">
-      {Array(7).fill(null).map((day, i) => <CalendarCard key={15 + i} date={15 + i} />)}
-    </div>
-    <div className="Week">
-      {Array(7).fill(null).map((day, i) => <CalendarCard key={22 + i} date={22 + i} />)}
-    </div>
+  <div className="monthly-calendar-content">
+    {[
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+    ].map(day => (
+      <Typography
+        style={{
+          width: 150, margin: 6, textAlign: 'center', color: 'purple',
+        }}
+        variant="h6"
+        key={day}
+      >
+        {day}
+      </Typography>
+    ))}
+
+
+    {Array(cellsToRender).fill(null).map((day, i) => (<CalendarCard key={`${i}day`} cellId={i} />
+    ))}
   </div>
+
+
 );
 
 
-export default connect(mapStateToProps)(MonthlyCalendar);
+export default connect()(MonthlyCalendar);
 
 // calendarData[2018].november.days

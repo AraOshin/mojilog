@@ -38,11 +38,11 @@ const mapStateToProps = state => ({
 
 class EmojiChoice extends Component {
   static propTypes = {
-    classes: PropTypes.object.isRequired,
-    emojiOptions: PropTypes.object.isRequired,
-    onEmojiClick: PropTypes.func.isRequired,
-    onOutsideClick: PropTypes.func.isRequired,
-    style: PropTypes.object.isRequired,
+    classes: PropTypes.object,
+    emojiOptions: PropTypes.object,
+    onEmojiClick: PropTypes.func,
+    onOutsideClick: PropTypes.func,
+    style: PropTypes.object,
   };
 
   render() {

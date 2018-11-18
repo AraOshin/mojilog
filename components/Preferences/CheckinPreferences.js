@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Card, CardContent, CardHeader, Typography, TextField, Button, Tooltip,
+  Card, CardContent, CardHeader, TextField, Button,
 } from '@material-ui/core';
 import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
 import shortid from 'shortid';
+import Tooltip from '@material-ui/core/Tooltip';
 import AddButton from '../UI/AddButton';
 import EmojiPicker from '../EmojiPicker/EmojiPicker';
-import { getEmojiOptions } from '../../src/selectors/selectors';
+// import { getEmojiOptions } from '../../src/selectors/selectors';
+import { chooseDefaultEmojiThunk } from '../../src/thunks';
 
 
 const styles = {
@@ -27,8 +29,8 @@ const styles = {
 
 const mapStateToProps = (state, props) => ({
   logData: state.logsData[props.logKey],
-  inCreateMode: !!props.inCreateMode,
-  emojiOptions: state.logsData[props.logKey] ? state.logsData[props.logKey].emojiOptions : null,
+  emojiOptions: (!props.inCreateMode && state.logsData[props.logKey])
+    ? state.logsData[props.logKey].emojiOptions : null,
 });
 
 
@@ -38,62 +40,54 @@ class CreateCheckinCard extends Component {
     this.state = {
       showEmojiPicker: false,
       checkinNameInput: '',
-      toSelect: 0,
-      selectedEmojis: props.emojiOptions,
+      emojiClickedIndex: null,
+      newEmojiOptions: {},
     };
   }
 
 
-  handleEmojiPickerClick = () => {
-    this.setState({ showEmojiPicker: true });
+  handleEmojiPickerClick = (i) => {
+    const { showEmojiPicker } = this.state;
+
+    this.setState({ showEmojiPicker: !showEmojiPicker, emojiClickedIndex: i });
   };
 
-  handleEmojiSelect = (emoji) => {
-    const { logData } = this.props;
-    const { toSelect, selectedEmojis } = this.state;
+  handleDefaultEmojiSelect = (emojiChoice) => {
+    const {
+      dispatch,
+      logKey,
+      emojiOptions,
+      inCreateMode,
+    } = this.props;
 
-    const updatedSelectedEmojis = selectedEmojis;
-    updatedSelectedEmojis[toSelect] = emoji;
+    const { emojiClickedIndex } = this.state;
 
-    this.setState({
-      // selectedEmojis: updatedSelectedEmojis,
-      showEmojiPicker: false,
-      toSelect: toSelect + 1,
-    });
-    console.log(toSelect);
-  };
+    this.setState({ showEmojiPicker: false });
 
+
+    dispatch(chooseDefaultEmojiThunk(emojiChoice, logKey, emojiClickedIndex, emojiOptions));
+  }
+
+  // TODO FIX
   handleSubmitCheckinPreferences = () => {
-    const { selectedEmojis, checkinNameInput } = this.state;
+    const { emojiOptions, inCreateMode } = this.props;
+    const { checkinNameInput } = this.state;
     const { logKey } = this.props;
 
-
-    const newLogKey = logKey || shortid.generate();
+    const newLogKey = inCreateMode ? shortid.generate() : logKey;
     console.log(newLogKey);
     const postBody = {
       [newLogKey]: {
         label: checkinNameInput,
-        emojiOptions: { ...selectedEmojis },
+        emojiOptions: inCreateMode
+          ? [] : emojiOptions,
       },
     };
-    axios.patch('https://emoji-tracker-f72cc.firebaseio.com/logs.json', postBody);
+
+    const res = axios.patch('https://emoji-tracker-f72cc.firebaseio.com/logs.json', postBody);
+    console.log(checkinNameInput);
+    console.log(res.data);
   };
-
-
-  // handleSubmitCheckinPreferencesWithThunk = () => {
-  //   const { selectedEmojis, checkinNameInput } = this.state;
-  //   const { logKey, dispatch } = this.props;
-
-  //   const newLogKey = logKey || shortid.generate();
-  //   const postBody = {
-  //     [newLogKey]: {
-  //       label: checkinNameInput,
-  //       emojiOptions: { ...selectedEmojis },
-  //     },
-  //   };
-
-  //   dispatch(SubmitPreferencesThunk(postbody));
-  // }
 
 
   handleInputChange = (event) => {
@@ -105,7 +99,6 @@ class CreateCheckinCard extends Component {
     const {
       toSelect,
       showEmojiPicker,
-      selectedEmojis,
     } = this.state;
 
     const {
@@ -129,20 +122,28 @@ class CreateCheckinCard extends Component {
               onChange={this.handleInputChange}
             />
 
-            {toSelect < 5
-              && (
-                <Tooltip title="Add">
-                  <AddButton onClick={this.handleEmojiPickerClick} />
-                </Tooltip>
-              )
-            }
+            <Tooltip title="select up to five emoji options">
+              <div>
+                {(inCreateMode || (emojiOptions && emojiOptions.length < 5))
+                  && (
+                    <AddButton onClick={() => this.handleEmojiPickerClick(null)} />
+                  )
+                }
+              </div>
+            </Tooltip>
+
 
             <div align="center">
-              {showEmojiPicker && <EmojiPicker onEmojiSelect={this.handleEmojiSelect} />}
+              {showEmojiPicker && (
+                <EmojiPicker
+                  onEmojiSelect={this.handleDefaultEmojiSelect}
+                />
+              )}
 
               {emojiOptions
                 && Object.values(emojiOptions).map((emojiChoice, i) => (
                   <Emoji
+                    onClick={() => this.handleEmojiPickerClick(i)}
                     emoji={emojiChoice.id}
                     key={emojiChoice.id + i}
 
@@ -151,9 +152,7 @@ class CreateCheckinCard extends Component {
                   />
                 ))
               }
-              <Button color="primary">
-                Cancel
-              </Button>
+
               <Button
                 color="primary"
                 onClick={this.handleSubmitCheckinPreferences}

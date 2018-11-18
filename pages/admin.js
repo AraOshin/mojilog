@@ -11,8 +11,8 @@ const mapStateToProps = state => ({
 
 const Admin = ({ logKeys }) => (
   <div align="center">
-    {logKeys.map(logKey => <CheckinPreferences logKey={logKey} />)}
-    <CheckinPreferences inCreateMode />
+    {logKeys.map(logKey => <CheckinPreferences logKey={logKey} key={logKey} />)}
+
   </div>
 
 );

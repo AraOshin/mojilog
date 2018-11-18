@@ -6,9 +6,9 @@ import OutsideClickHandler from 'react-outside-click-handler';
 
 class EmojiPicker extends Component {
   static propTypes = {
-    onEmojiSelect: PropTypes.func.isRequired,
-    onOutsideClick: PropTypes.func.isRequired,
-    style: PropTypes.object.isRequired,
+    // onEmojiSelect: PropTypes.func.isRequired,
+    // onOutsideClick: PropTypes.func.isRequired,
+    // style: PropTypes.object.isRequired,
   };
 
   render() {
