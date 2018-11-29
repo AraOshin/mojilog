@@ -4,15 +4,14 @@ import { connect } from 'react-redux';
 import CheckinPreferences from '../components/Preferences/CheckinPreferences';
 
 
-const mapStateToProps = state => ({
-  logKeys: Object.keys(state.logsData),
-});
+const mapStateToProps = state => ({ logKeys: state.root.logsData && Object.keys(state.root.logsData) });
 
 
 const Admin = ({ logKeys }) => (
   <div align="center">
+    {console.log(logKeys)}
     {logKeys.map(logKey => <CheckinPreferences logKey={logKey} key={logKey} />)}
-
+    <CheckinPreferences inCreateMode />
   </div>
 
 );

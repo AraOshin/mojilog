@@ -4,7 +4,7 @@
 
 
 // export default class EmojiArt extends Component {
-//   state = {
+//   state= {
 //     paintedEmojis: [
 
 //     ],
@@ -13,15 +13,15 @@
 
 //   componentDidMount = () => {
 //     window.addEventListener('mousemove', (e) => {
-//       if (this.state.emoji) {
+//       if (this.state.rootemoji) {
 //         const newPaintedEmoji = {
 //           x: e.clientX,
 //           y: e.clientY,
-//           emoji: this.state.emoji,
+//           emoji: this.state.rootemoji,
 //         };
 
 //         const updatedPaintedEmojis = [
-//           ...this.state.paintedEmojis,
+//           ...this.state.rootpaintedEmojis,
 //           newPaintedEmoji,
 //         ];
 //         this.setState({ paintedEmojis: updatedPaintedEmojis });
@@ -31,7 +31,7 @@
 
 //   handleEmojiSelect = (emoji) => {
 //     this.setState({ emoji: { emoji } });
-//     console.log(this.state);
+//     console.log(this.state;
 //   }
 
 
@@ -44,7 +44,7 @@
 //           }}
 //           onEmojiSelect={this.handleEmojiSelect}
 //         />
-//         {this.state.paintedEmojis.map(paintedEmoji => (
+//         {this.state.rootpaintedEmojis.map(paintedEmoji => (
 //           <div style={{ position: 'absolute', top: paintedEmoji.y, left: paintedEmoji.x }}>
 //             <Emoji emoji={paintedEmoji.emoji.emoji.id} size={48} />
 //           </div>

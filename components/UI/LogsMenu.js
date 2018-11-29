@@ -7,8 +7,8 @@ import { switchActiveMojilog } from '../../src/thunks';
 
 
 const mapStateToProps = state => ({
-  logsData: state.logsData,
-  activeLogKey: state.activeLogKey,
+  logsData: state.root.logsData,
+  activeLogKey: state.root.activeLogKey,
 });
 
 class LogsMenu extends React.Component {

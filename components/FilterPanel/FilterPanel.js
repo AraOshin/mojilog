@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const styles = theme => ({
-  root: {
+  state: {
     width: '100%',
   },
   heading: {
@@ -20,7 +20,7 @@ const styles = theme => ({
 function FilterExpansionPanel(props) {
   const { classes } = props;
   return (
-    <div className={classes.root}>
+    <div className={classes.state}>
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography className={classes.heading}>Filter </Typography>

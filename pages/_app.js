@@ -4,106 +4,20 @@ import Head from 'next/head';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
-import { createStore, applyMiddleware, compose } from 'redux';
+import {
+  createStore, applyMiddleware, compose, combineReducers,
+} from 'redux';
 import { Provider } from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import thunk from 'redux-thunk';
+import { reducer as formReducer } from 'redux-form';
 import getPageContext from '../src/getPageContext';
+import rootReducer from '../src/reducers/rootReducer';
 
-
-const initialState = {
-  emojiData: {},
-  calendarData: {},
-  loading: {},
-  logsData: {},
-  activeLogKey: '-oQKlmrGL',
-  inJournalMode: true,
-  calendarMode: null,
-  dashboardLogs: {
-    kWeLlAkRI: true,
-    mirYAfBzu: true,
-    z7vHuxqlk: true,
-  },
-  mojiLogsKeys: ['kWeLlAkRI', 'mirYAfBzu', 'z7vHuxqlk'],
-
-
-};
-
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'FETCH':
-      // console.log('reducer called', action.payload);
-      return {
-        ...state,
-        emojiData: action.emojiData,
-        calendarData: action.emojiData,
-        logsData: action.logsData,
-        calendarMode: action.calendarMode,
-      };
-    case 'SET_LOADING':
-      // console.log('reducer called', action.payload);
-      return {
-        ...state, loading: { ...state.loading, [action.date]: action.loading },
-      };
-    case 'UPDATE_CELL_EMOJI':
-      // console.log('reducer called', action.payload);
-      return {
-
-        ...state,
-        logsData: {
-          ...state.logsData,
-          [action.activeLogKey]: {
-            ...state.logsData[action.activeLogKey],
-            data: {
-              ...state.logsData[action.activeLogKey].data,
-              ...action.emoji,
-            },
-          },
-        },
-      };
-    case 'UPDATE_LOG_DEFAULT_EMOJIS':
-      console.log('reducer called', action.emojiUpdate);
-      return {
-
-        ...state,
-        logsData: {
-          ...state.logsData,
-          [action.logKey]: {
-            ...state.logsData[action.logKey],
-            emojiOptions: [...action.emojiUpdate],
-          },
-        },
-      };
-    case 'ADMIN_FETCH':
-      console.log('reducer called', action.logsData);
-      return {
-        ...state,
-        logsData: action.logsData,
-      };
-    case 'SET_ACTIVE_LOG':
-      console.log('reducer called', action.selectedLogKey);
-
-      return {
-        ...state,
-        activeLogKey: action.selectedLogKey,
-        inJournalMode: action.journalMode,
-      };
-    case 'MOJILOG_DASHBOARD_TOGGLE':
-      console.log('reducer called', action.selectedLogKey);
-
-      return {
-        ...state,
-        dashboardLogs: {
-          ...state.dashboardLogs,
-          [action.logKey]: !state.dashboardLogs[action.logKey],
-        },
-      };
-
-
-    default:
-      return state;
-  }
-};
+const reducers = combineReducers({
+  root: rootReducer,
+  form: formReducer,
+});
 
 const composeEnhancers = typeof window === 'object'
   && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -116,7 +30,7 @@ const enhancer = composeEnhancers(
   // other store enhancers if any
 );
 
-const makeStore = (initialState, options) => createStore(reducer, initialState, enhancer);//eslint-disable-line
+const makeStore = (initialState, options) => createStore(reducers, initialState, enhancer);//eslint-disable-line
 
 
 class MyApp extends App {

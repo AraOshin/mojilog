@@ -8,40 +8,40 @@ import EmojiPicker from '../components/EmojiPicker/EmojiPicker';
 // import { ModalManager } from '@material-ui/core';
 
 export default class Home extends Component {
-  state = {
-    showEmojiPicker: false,
-    selectedEmoji: {
-      emoji: {},
-    },
-  }
+    state = {
+        showEmojiPicker: false,
+        selectedEmoji: {
+            emoji: {},
+        },
+    }
 
 
-  handleEmojiPickerClick = (props) => {
-    this.setState({ showEmojiPicker: true });
-    console.log(this.state.selectedEmoji);
-  };
-
-  handleEmojiSelect = (emoji) => {
-    const updatedSelectedEmoji = {
-      emoji: { emoji },
-      date: new Date(),
+    handleEmojiPickerClick = (props) => {
+        this.setState({ showEmojiPicker: true });
+        console.log(this.state.rootselectedEmoji);
     };
-    this.setState({ selectedEmoji: updatedSelectedEmoji, showEmojiPicker: false });
-    axios.post('https://emoji-tracker-f72cc.firebaseio.com/emoji.json', this.state.updatedSelectedEmoji);
-  }
 
-  render() {
-    return (
-      <div align="center">
-        <CheckInCard
-          onEmojiPickerClick={this.handleEmojiPickerClick}
-          selectedEmoji={this.state.selectedEmoji.emoji}
-        />
-        {
-          this.state.showEmojiPicker
-          && <EmojiPicker onEmojiSelect={this.handleEmojiSelect} />
-        }
-      </div>
-    );
-  }
+    handleEmojiSelect = (emoji) => {
+        const updatedSelectedEmoji = {
+            emoji: { emoji },
+            date: new Date(),
+        };
+        this.setState({ selectedEmoji: updatedSelectedEmoji, showEmojiPicker: false });
+        axios.post('https://emoji-tracker-f72cc.firebaseio.com/emoji.json', this.state.rootupdatedSelectedEmoji);
+    }
+
+    render() {
+        return (
+            <div align="center">
+                <CheckInCard
+                    onEmojiPickerClick={this.handleEmojiPickerClick}
+                    selectedEmoji={this.state.rootselectedEmoji.emoji}
+                />
+                {
+                    this.state.rootshowEmojiPicker
+                    && <EmojiPicker onEmojiSelect={this.handleEmojiSelect} />
+                }
+            </div>
+        );
+    }
 }

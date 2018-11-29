@@ -10,7 +10,7 @@ import DashboardContent from './DashboardContent';
 
 
 const mapStateToProps = state => ({
-  calendarMode: state.calendarMode,
+  calendarMode: state.root.calendarMode,
 });
 
 const styles = {
@@ -37,6 +37,9 @@ const styles = {
 class CalendarCard extends Component {
   static propTypes = {
     classes: PropTypes.object.isRequired,
+    cellId: PropTypes.number,
+    calendarMode: PropTypes.string,
+
 
   };
 
@@ -57,10 +60,13 @@ class CalendarCard extends Component {
   }
 
   componentDidMount() {
+    this.storeCell();
+  }
+
+  storeCell = () => {
     const cell = this.cardRef.current.getBoundingClientRect();
     this.setState({ cell });
   }
-
 
   renderCardContent = () => {
     const { cell } = this.state;
@@ -68,7 +74,7 @@ class CalendarCard extends Component {
 
     if (!this.activeInMonth) return <div />;
     if (calendarMode === 'mojilog') {
-      return <CalendarContent cell={cell} cellId={cellId} date={this.date} activeInMonth={this.activeInMonth} />;
+      return <CalendarContent cell={cell} storeCell={this.storeCell} cellId={cellId} date={this.date} activeInMonth={this.activeInMonth} />;
     }
     if (calendarMode === 'dashboard') {
       return <DashboardContent cell={cell} cellId={cellId} date={this.date} activeInMonth={this.activeInMonth} />;
@@ -78,12 +84,7 @@ class CalendarCard extends Component {
   render() {
     const {
       classes,
-      cellId,
-
-
     } = this.props;
-
-    const { cell } = this.state;
 
 
     return (
@@ -93,23 +94,17 @@ class CalendarCard extends Component {
         <Card className={classes.card}>
 
           <CardContent>
-            {this.activeInMonth && (
-              <Typography variant="h5" component="h2">
-                {this.date}
-              </Typography>
-            )
-
+            {
+              this.activeInMonth && (
+                <Typography variant="h5" component="h2">
+                  {this.date}
+                </Typography>
+              )
             }
-
             {this.renderCardContent()}
-
-
           </CardContent>
-
-
         </Card>
       </RootRef>
-
     );
   }
 }

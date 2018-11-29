@@ -7,7 +7,6 @@ import CardContent from '@material-ui/core/CardContent';
 import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
 import OutsideClickHandler from 'react-outside-click-handler';
-import { Typography } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import Button from '@material-ui/core/Button';
 import { getEmojiOptions } from '../../src/selectors/selectors';

@@ -28,9 +28,9 @@ const styles = {
 
 
 const mapStateToProps = (state, props) => ({
-  logData: state.logsData[props.logKey],
-  emojiOptions: (!props.inCreateMode && state.logsData[props.logKey])
-    ? state.logsData[props.logKey].emojiOptions : null,
+  logData: state.root.root.logsData[props.logKey],
+  emojiOptions: (!props.inCreateMode && state.root.root.logsData[props.logKey])
+    ? state.root.root.logsData[props.logKey].emojiOptions : null,
 });
 
 
@@ -41,7 +41,7 @@ class CreateCheckinCard extends Component {
       showEmojiPicker: false,
       checkinNameInput: '',
       emojiClickedIndex: null,
-      newEmojiOptions: {},
+      newEmojiOptions: {}, // TODO for refactor
     };
   }
 
@@ -121,6 +121,7 @@ class CreateCheckinCard extends Component {
               type="text"
               onChange={this.handleInputChange}
             />
+
 
             <Tooltip title="select up to five emoji options">
               <div>

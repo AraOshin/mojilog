@@ -13,7 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 
 const styles = theme => ({
-  root: {
+  state: {
     textAlign: 'center',
     paddingTop: theme.spacing.unit * 20,
   },
@@ -38,10 +38,10 @@ class Index extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
+    const { open } = this.state
 
     return (
-      <div className={classes.root}>
+      <div className={classes.state}>
         <Dialog open={open} onClose={this.handleClose}>
           <DialogTitle>Super Secret Password</DialogTitle>
           <DialogContent>

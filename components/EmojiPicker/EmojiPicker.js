@@ -1,3 +1,6 @@
+/* eslint-disable react/prefer-stateless-function */
+// Stateful component needed for OutsideClickHandler
+
 import React, { Component } from 'react';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
@@ -6,9 +9,9 @@ import OutsideClickHandler from 'react-outside-click-handler';
 
 class EmojiPicker extends Component {
   static propTypes = {
-    // onEmojiSelect: PropTypes.func.isRequired,
-    // onOutsideClick: PropTypes.func.isRequired,
-    // style: PropTypes.object.isRequired,
+    onEmojiSelect: PropTypes.func,
+    onOutsideClick: PropTypes.func,
+    style: PropTypes.object,
   };
 
   render() {

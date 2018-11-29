@@ -26,7 +26,7 @@ const styles = {
 
 const mapStateToProps = state => ({
   mojiLogs:
-    (state.mojiLogsKeys).map(logKey => ({ [logKey]: state.logsData[logKey].label })),
+    (state.root.mojiLogsKeys).map(logKey => ({ [logKey]: state.root.logsData[logKey].label })),
 
 });
 

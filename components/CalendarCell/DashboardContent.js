@@ -1,33 +1,38 @@
 /* eslint-disable react/prefer-stateless-function */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 // import { CircularProgress, Button } from '@material-ui/core/';
 import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
-import m from 'moment';
 import Tooltip from '@material-ui/core/Tooltip';
-import { getDashboardKeys } from '../../src/selectors/selectors';
+import { getDashboardEmojiBudle } from '../../src/selectors/selectors';
 
 
 const mapStateToProps = (state, props) => ({
-  emojiBundle: (getDashboardKeys(state)).map(logKey => state.logsData[logKey].data[props.date] && { ...state.logsData[logKey].data[props.date], mojiLogKey: logKey, mojiLogLabel: state.logsData[logKey].label }).filter(result => !!result),
-  cell: props.cell,
+  dashboardEmojiBudle: getDashboardEmojiBudle(state, props),
 });
 
 
 class DashboardContent extends Component {
-  renderCellContent = () => {
-    const { emojiBundle, date } = this.props;
+  static propTypes = {
+    // dispatch: PropTypes.func,
+    // loading: PropTypes.bool,
+    date: PropTypes.number,
+    // TODO dashboardEmojiBudle:
+  };
 
-    return Object.values(emojiBundle).map(emoji => <Tooltip title={emoji.mojiLogLabel}><div><Emoji emoji={emoji.id} set="apple" size={28} /></div></Tooltip>);
+  renderCellContent = () => {
+    const { dashboardEmojiBudle } = this.props;
+
+    return Object.values(dashboardEmojiBudle).map(emoji => <Tooltip title={emoji.mojiLogLabel}><div><Emoji emoji={emoji.id} set="apple" size={28} /></div></Tooltip>);
   }
 
   render() {
-    const { emojiBundle, date } = this.props;
+    const { date, dashboardEmojiBudle } = this.props;
 
 
-    console.log(date, emojiBundle);
-    const moment = m;
+    console.log(date, dashboardEmojiBudle);
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         {this.renderCellContent()}

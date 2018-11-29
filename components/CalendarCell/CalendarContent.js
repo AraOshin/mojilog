@@ -5,46 +5,49 @@ import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
 import AddIcon from '@material-ui/icons/Add';
 import moment from 'moment';
-// import NoteAdd from '@material-ui/icons/NoteAdd';
 import { chooseEmojiThunk } from '../../src/thunks';
 import AddButton from '../UI/AddButton';
 import EmojiChoice from '../EmojiPicker/EmojiChoice';
 import EmojiPicker from '../EmojiPicker/EmojiPicker';
-import { getEmoji, getJournalEmojis } from '../../src/selectors/selectors';
+import {
+  getJournalEmojis,
+  getActiveEmojiData,
+} from '../../src/selectors/selectors';
 
 const mapStateToProps = (state, props) => ({
-  activeLogKey: state.activeLogKey,
-  emoji: getEmoji(state, props),
+  activeLogKey: state.root.activeLogKey,
+  emoji: getActiveEmojiData(state, props),
   journalEmojis: getJournalEmojis(state, props),
-  loading: state.loading[props.monthDay + 1],
-  inJournalMode: state.inJournalMode,
-  cell: props.cell,
+  loading: state.root.loading[props.monthDay + 1],
+  inJournalMode: state.root.inJournalMode,
 });
 
 class CalendarContent extends Component {
   static propTypes = {
-    // emoji: PropTypes.array.isRequired,
     dispatch: PropTypes.func,
     loading: PropTypes.bool,
     cell: PropTypes.object.isRequired,
+    date: PropTypes.number,
+    activeLogKey: PropTypes.string,
+    inJournalMode: PropTypes.bool,
+    // TODO journalEmojis:
+    // TODO activeInMonth:
+    emoji: PropTypes.object,
   };
-
 
   constructor(props) {
     super(props);
 
-
     this.state = {
       showEmojiChoice: false,
       journalEmojiClickedIndex: null,
-
-
     };
   }
 
 
   handleEmojiChoiceClick = (i) => {
     const { showEmojiChoice } = this.state;
+    this.props.storeCell(); // TODO
     this.setState({ showEmojiChoice: !showEmojiChoice, journalEmojiClickedIndex: i });
   };
 
@@ -65,8 +68,6 @@ class CalendarContent extends Component {
       date,
       dispatch,
       activeLogKey,
-      inJournalMode,
-      journalEmojis,
     } = this.props;
 
     const { showEmojiChoice, journalEmojiClickedIndex } = this.state;
@@ -84,11 +85,9 @@ class CalendarContent extends Component {
       loading,
       inJournalMode,
       journalEmojis,
-      cellId,
       activeInMonth,
     } = this.props;
 
-    const startOfMonthDay = moment().startOf('month').day();
 
     if (!activeInMonth) return <Emoji emoji="apple" set="apple" size={48} />;
 
@@ -97,7 +96,7 @@ class CalendarContent extends Component {
 
     if (!loading) {
       if (!inJournalMode) {
-        return<Emoji onClick={this.handleEmojiChoiceClick} emoji={emoji} set="apple" size={48} />;
+        return <Emoji onClick={this.handleEmojiChoiceClick} emoji={emoji} set="apple" size={48} />;
       }
       return (
         <div style={{
@@ -118,19 +117,14 @@ class CalendarContent extends Component {
       );
     }
 
-
     return <CircularProgress size={20} />;
   }
 
   render() {
     const {
       inJournalMode,
-      journalEmojis,
-      key,
     } = this.props;
     const { showEmojiChoice } = this.state;
-
-    console.log(key);
 
     return (
 
@@ -158,10 +152,7 @@ class CalendarContent extends Component {
             )
           )
         }
-
       </div>
-
-
     );
   }
 }

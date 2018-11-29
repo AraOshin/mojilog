@@ -1,21 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, FormControlLabel, Checkbox } from '@material-ui/core';
 import green from '@material-ui/core/colors/green';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { FormGroup } from '@material-ui/core';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state, props) => ({
   mojiLogs:
-    (state.mojiLogsKeys).map(logKey => ({ [logKey]: state.logsData[logKey].label })),
-  keyChecked: state.dashboardLogs[props.logKey],
+    (state.root.mojiLogsKeys).map(logKey => ({ [logKey]: state.root.logsData[logKey].label })),
+  keyChecked: state.root.dashboardLogs[props.logKey],
 
 });
 
 const styles = {
-  root: {
+  state: {
     color: green[600],
     '&$checked': {
       color: green[500],
@@ -46,7 +43,7 @@ class CheckBox extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, label } = this.props;
 
     return (
 
