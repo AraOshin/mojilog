@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 
 const styles = theme => ({
-  root: {
+  state: {
     textAlign: 'center',
     paddingTop: theme.spacing.unit * 20,
   },
@@ -18,7 +18,7 @@ function About(props) {
   const { classes } = props;
 
   return (
-    <div className={classes.root}>
+    <div className={classes.state}>
       <Typography variant="h4" gutterBottom>
         Material-UI
       </Typography>

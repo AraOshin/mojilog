@@ -13,15 +13,15 @@
 
 //   componentDidMount = () => {
 //     window.addEventListener('mousemove', (e) => {
-//       if (this.state.rootemoji) {
+//       if (this.state.root.emoji) {
 //         const newPaintedEmoji = {
 //           x: e.clientX,
 //           y: e.clientY,
-//           emoji: this.state.rootemoji,
+//           emoji: this.state.root.emoji,
 //         };
 
 //         const updatedPaintedEmojis = [
-//           ...this.state.rootpaintedEmojis,
+//           ...this.state.root.paintedEmojis,
 //           newPaintedEmoji,
 //         ];
 //         this.setState({ paintedEmojis: updatedPaintedEmojis });
@@ -44,7 +44,7 @@
 //           }}
 //           onEmojiSelect={this.handleEmojiSelect}
 //         />
-//         {this.state.rootpaintedEmojis.map(paintedEmoji => (
+//         {this.state.root.paintedEmojis.map(paintedEmoji => (
 //           <div style={{ position: 'absolute', top: paintedEmoji.y, left: paintedEmoji.x }}>
 //             <Emoji emoji={paintedEmoji.emoji.emoji.id} size={48} />
 //           </div>

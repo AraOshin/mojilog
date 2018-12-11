@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { withStyles, FormControlLabel, Checkbox } from '@material-ui/core';
 import green from '@material-ui/core/colors/green';
 import { connect } from 'react-redux';
+import { getAllLogKeys } from '../../src/selectors/selectors';
+
 
 const mapStateToProps = (state, props) => ({
   mojiLogs:
-    (state.root.mojiLogsKeys).map(logKey => ({ [logKey]: state.root.logsData[logKey].label })),
+    getAllLogKeys(state).map(logKey => ({ [logKey]: state.root.logsData[logKey].label })),
   keyChecked: state.root.dashboardLogs[props.logKey],
 
 });

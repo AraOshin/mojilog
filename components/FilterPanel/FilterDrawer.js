@@ -12,7 +12,8 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { Typography, FormGroup } from '@material-ui/core';
 import { connect } from 'react-redux';
-import CheckBoxSelect from '../UI/CheckBoxSelect';
+import CheckBoxSelect from './CheckBoxSelect';
+import { getAllLogKeys } from '../../src/selectors/selectors';
 
 
 const styles = {
@@ -26,7 +27,7 @@ const styles = {
 
 const mapStateToProps = state => ({
   mojiLogs:
-    (state.root.mojiLogsKeys).map(logKey => ({ [logKey]: state.root.logsData[logKey].label })),
+    getAllLogKeys(state).map(logKey => ({ [logKey]: state.root.logsData[logKey].label })),
 
 });
 

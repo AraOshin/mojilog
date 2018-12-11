@@ -2,10 +2,18 @@ import { createSelector } from 'reselect';
 
 export const getActiveLogKey = state => state.root.activeLogKey;
 export const getLogsData = state => state.root.logsData;
+export const getAllLogKeys = state => Object.keys(state.root.logsData);
 export const getDate = (state, { date }) => date;
+export const getDashboardLogs = state => state.root.dashboardLogs;
 
 
-export const getDashboardKeys = state => Object.entries(state.root.dashboardLogs).filter(logArray => logArray[1]).map(logArray => logArray[0]);
+export const getDashboardKeys = createSelector(
+  getDashboardLogs,
+  dashboardLogs,
+   => Object.entries(dashboardLogs).filter(logArray => logArray[1]).map(logArray => logArray[0]),
+);
+
+// export const getDashboardKeys = state => Object.entries(state.root.dashboardLogs).filter(logArray => logArray[1]).map(logArray => logArray[0]);
 
 export const getActiveLogData = createSelector(
   getLogsData,
@@ -32,7 +40,7 @@ export const getJournalEmojis = createSelector(
   (
     logsData,
     date,
-  ) => logsData['-oQKlmrGL'].data && logsData['-oQKlmrGL'].data[date],
+  ) => logsData['-oQKlmrGL'].data[date] && logsData['-oQKlmrGL'].data[date],
 );
 
 

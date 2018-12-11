@@ -18,7 +18,7 @@ export default class Home extends Component {
 
     handleEmojiPickerClick = (props) => {
         this.setState({ showEmojiPicker: true });
-        console.log(this.state.rootselectedEmoji);
+        console.log(this.state.root.selectedEmoji);
     };
 
     handleEmojiSelect = (emoji) => {
@@ -27,7 +27,7 @@ export default class Home extends Component {
             date: new Date(),
         };
         this.setState({ selectedEmoji: updatedSelectedEmoji, showEmojiPicker: false });
-        axios.post('https://emoji-tracker-f72cc.firebaseio.com/emoji.json', this.state.rootupdatedSelectedEmoji);
+        axios.post('https://emoji-tracker-f72cc.firebaseio.com/emoji.json', this.state.root.updatedSelectedEmoji);
     }
 
     render() {
@@ -35,10 +35,10 @@ export default class Home extends Component {
             <div align="center">
                 <CheckInCard
                     onEmojiPickerClick={this.handleEmojiPickerClick}
-                    selectedEmoji={this.state.rootselectedEmoji.emoji}
+                    selectedEmoji={this.state.root.selectedEmoji.emoji}
                 />
                 {
-                    this.state.rootshowEmojiPicker
+                    this.state.root.showEmojiPicker
                     && <EmojiPicker onEmojiSelect={this.handleEmojiSelect} />
                 }
             </div>
