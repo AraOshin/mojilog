@@ -4,12 +4,14 @@ const initialState = {
   loading: {},
   logsData: {},
   activeLogKey: '-oQKlmrGL',
+  journalLogKey: '-oQKlmrGL',
   inJournalMode: true,
   calendarMode: null,
   dashboardLogs: {
     kWeLlAkRI: true,
     mirYAfBzu: true,
     z7vHuxqlk: true,
+    '-oQKlmrGL': true,
   },
   mojiLogsKeys: ['kWeLlAkRI', 'mirYAfBzu', 'z7vHuxqlk'],
 
@@ -19,7 +21,7 @@ const initialState = {
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'FETCH':
-      // console.log('reducer called', action.payload);
+      console.log('FETCH reducer called', action.logsData);
       return {
         ...state,
         logsData: action.logsData,
@@ -37,11 +39,11 @@ const rootReducer = (state = initialState, action) => {
 
         ...state,
         logsData: {
-          ...state.root.logsData,
+          ...state.logsData,
           [action.activeLogKey]: {
-            ...state.root.logsData[action.activeLogKey],
+            ...state.logsData[action.activeLogKey],
             data: {
-              ...state.root.logsData[action.activeLogKey].data,
+              ...state.logsData[action.activeLogKey].data,
               ...action.emoji,
             },
           },
@@ -55,7 +57,7 @@ const rootReducer = (state = initialState, action) => {
         logsData: {
           ...state.logsData,
           [action.logKey]: {
-            ...state.root.logsData[action.logKey],
+            ...state.logsData[action.logKey],
             emojiOptions: [...action.emojiUpdate],
           },
         },

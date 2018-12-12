@@ -1,21 +1,16 @@
 import { createSelector } from 'reselect';
 
-export const getActiveLogKey = state => state.root.activeLogKey;
-export const getLogsData = state => state.root.logsData;
+const getActiveLogKey = state => state.root.activeLogKey;
+const getJournalLogKey = state => state.root.journalLogKey;
+const getLogsData = state => state.root.logsData;
 export const getAllLogKeys = state => Object.keys(state.root.logsData);
-export const getDate = (state, { date }) => date;
-export const getDashboardLogs = state => state.root.dashboardLogs;
+const getDate = (state, { date }) => date;
+
+const getDashboardKeys = state => Object.entries(state.root.dashboardLogs)
+  .filter(logArray => logArray[1]).map(logArray => logArray[0]);
 
 
-export const getDashboardKeys = createSelector(
-  getDashboardLogs,
-  dashboardLogs,
-   => Object.entries(dashboardLogs).filter(logArray => logArray[1]).map(logArray => logArray[0]),
-);
-
-// export const getDashboardKeys = state => Object.entries(state.root.dashboardLogs).filter(logArray => logArray[1]).map(logArray => logArray[0]);
-
-export const getActiveLogData = createSelector(
+const getActiveLogData = createSelector(
   getLogsData,
   getActiveLogKey,
   (
@@ -30,7 +25,7 @@ export const getActiveEmojiData = createSelector(
   (
     activeLogData,
     date,
-  ) => activeLogData.data && activeLogData.data[date],
+  ) => activeLogData.data[date] && activeLogData.data[date],
 );
 
 
@@ -49,20 +44,67 @@ export const getEmojiOptions = createSelector(
   activeLogData => activeLogData.emojiOptions,
 );
 
+const getJournalEmojisWithMeta = createSelector(
+  getJournalEmojis,
+  journalEmojis => journalEmojis
+    && journalEmojis
+      .map(emoji => ({
+        ...emoji,
+        mojiLogKey: 'journalKey',
+        mojiLogLabel: 'journalLabel',
+      }))
+      .filter(result => !!result),
+);
 
-export const getJournalEmojisWithMeta = (state, props) => getJournalEmojis(state, props)
-  && getJournalEmojis(state, props).map(emoji => ({
-    ...emoji,
-    mojiLogKey: 'journalKey',
-    mojiLogLabel: 'journalLabel',
-  })).filter(result => !!result);
+const getMojilogDashboardKeys = createSelector(
+  getDashboardKeys,
+  getJournalLogKey,
+  (
+    dashboardKeys,
+    journalLogKey,
+  ) => dashboardKeys
+    .filter(dashboardKey => (dashboardKey !== journalLogKey)),
+);
+
+const showJournalLogInDashboard = createSelector(
+  getDashboardKeys,
+  getJournalLogKey,
+  (
+    dashboardKeys,
+    journalLogKey,
+  ) => dashboardKeys.includes(journalLogKey),
+);
 
 
-export const getDashboardEmojiBudle = (state, props) => getDashboardKeys(state).map(logKey => state.root.logsData[logKey].data[props.date]
-  && {
-    ...state.root.logsData[logKey].data[props.date],
-    mojiLogKey: logKey,
-    mojiLogLabel: state.root.logsData[logKey].label,
-  })
-  .concat(getJournalEmojisWithMeta(state, props))
-  .filter(result => !!result);
+const getDashboardMojiLogEmojiBudle = createSelector(
+  getMojilogDashboardKeys,
+  getLogsData,
+  (state, props) => props,
+  (
+    mojilogDashboardKeys,
+    logsData,
+    props,
+  ) => mojilogDashboardKeys
+    .map(logKey => logsData[logKey].data[props.date]
+      && {
+        ...logsData[logKey].data[props.date],
+        mojiLogKey: logKey,
+        mojiLogLabel: logsData[logKey].label,
+      })
+    .filter(result => !!result),
+);
+
+export const getFullDashboardEmojiBundle = createSelector(
+  showJournalLogInDashboard,
+  getDashboardMojiLogEmojiBudle,
+  getJournalEmojisWithMeta,
+  (
+    journalLogInDashboard,
+    dashboardMojiLogEmojiBudle,
+    journalEmojisWithMeta,
+  ) => (journalLogInDashboard
+    ? dashboardMojiLogEmojiBudle
+      .concat(journalEmojisWithMeta)
+      .filter(result => !!result)
+    : dashboardMojiLogEmojiBudle),
+);

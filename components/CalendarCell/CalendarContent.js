@@ -4,7 +4,6 @@ import { CircularProgress, Button } from '@material-ui/core/';
 import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
 import AddIcon from '@material-ui/icons/Add';
-import moment from 'moment';
 import { chooseEmojiThunk } from '../../src/thunks';
 import AddButton from '../UI/AddButton';
 import EmojiChoice from '../EmojiPicker/EmojiChoice';

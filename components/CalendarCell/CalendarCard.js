@@ -19,6 +19,7 @@ const styles = {
     height: 135,
     margin: 6,
     position: 'relative',
+    overflow: 'auto',
   },
   bullet: {
     display: 'inline-block',

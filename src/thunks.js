@@ -9,7 +9,7 @@ export const chooseEmojiThunk = (
   journalEmojiClickedIndex,
 ) => async (dispatch, getState) => {
   const state = getState();
-  const { inJournalMode } = state;
+  const { inJournalMode } = state.root;
   const journalEmojis = getJournalEmojis(state, { date });
 
   const updatedjournalEmojis = journalEmojis ? [...journalEmojis] : [];

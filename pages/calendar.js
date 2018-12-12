@@ -34,8 +34,8 @@ Calendar.getInitialProps = async ({ store }) => {
 
   dispatch({
     type: 'FETCH',
-    emojiData: res.data.data,
-    calendarData: res.data.calendar,
+    // emojiData: res.data.data,
+    // calendarData: res.data.calendar,
     logsData: res.data.logs,
     calendarMode: 'mojilog',
   });

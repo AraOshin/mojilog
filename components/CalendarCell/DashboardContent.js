@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 import { Emoji } from 'emoji-mart';
 import { connect } from 'react-redux';
 import Tooltip from '@material-ui/core/Tooltip';
-import { getDashboardEmojiBudle } from '../../src/selectors/selectors';
+import { getFullDashboardEmojiBundle } from '../../src/selectors/selectors';
 
 
 const mapStateToProps = (state, props) => ({
-  dashboardEmojiBudle: getDashboardEmojiBudle(state, props),
+  dashboardEmojiBudle: getFullDashboardEmojiBundle(state, props),
 });
 
 
@@ -34,7 +34,7 @@ class DashboardContent extends Component {
 
     console.log(date, dashboardEmojiBudle);
     return (
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
         {this.renderCellContent()}
       </div>
     );
