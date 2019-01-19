@@ -3,7 +3,6 @@ import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import './MonthlyCalendar.css';
 import moment from 'moment';
-
 import CalendarCard from '../CalendarCell/CalendarCard';
 
 const cellsToRender = Math.ceil(

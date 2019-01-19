@@ -68,14 +68,14 @@ class FilterDrawer extends React.Component {
 
         <Divider />
         <div className={classes.list}>
-          <List>
+          {/* <List>
             {['Done', 'Cancel', 'Save'].map((text, index) => (
               <ListItem button onClick={this.toggleDrawer('left', false)} key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
-          </List>
+          </List> */}
         </div>
       </div>
     );

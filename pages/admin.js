@@ -11,7 +11,7 @@ const Admin = ({ logKeys }) => (
   <div align="center">
     {console.log(logKeys)}
     {logKeys.map(logKey => <CheckinPreferences logKey={logKey} key={logKey} />)}
-    <CheckinPreferences inCreateMode />
+    {/* <CheckinPreferences inCreateMode /> */}
   </div>
 
 );
